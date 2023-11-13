@@ -1,3 +1,4 @@
+import BlenderToThree from "@comp/BlenderToThree"
 import SyslarSysterm from "@comp/SyslarSysterm"
 
 function App() {
@@ -5,7 +6,8 @@ function App() {
 
   return (
     <>
-           <SyslarSysterm/>
+        {/*    <SyslarSysterm/> */}
+         <BlenderToThree/>
     </>
   )
 }

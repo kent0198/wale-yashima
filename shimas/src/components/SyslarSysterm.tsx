@@ -132,10 +132,10 @@ const SyslarSysterm = () => {
     rederer.setSize(window.innerWidth, window.innerHeight);
 });
 
-  return (
-    <div className=''>
 
-    </div>
+  return (
+   <>
+   </>
   )
 }
 
