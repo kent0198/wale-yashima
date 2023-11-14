@@ -11,6 +11,7 @@ const BlenderToThree = () => {
     renderer.setSize(window.innerWidth, window.innerHeight)
     document.body.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
+    scene.receiveShadow=true
     const camera = new THREE.PerspectiveCamera(
         45,
         window.innerWidth / window.innerHeight,
@@ -24,8 +25,14 @@ const BlenderToThree = () => {
     camera.position.set(10, 10, 10);
     orbit.update();
 
-    const grid = new THREE.GridHelper(30, 30);
+    const grid = new THREE.GridHelper(10, 10);
+    grid.receiveShadow=true
     scene.add(grid);
+
+    const light = new THREE.DirectionalLight(0xffffff,1)
+    light.position.set(5,5,5)
+    light.castShadow=true
+    scene.add(light)
 
     const assetLoader = new GLTFLoader();
 
@@ -40,10 +47,11 @@ const BlenderToThree = () => {
             const action = mixer.clipAction(clip);
             action.play();
         });
-    }, undefined, function (error) {
+    }, undefined, function (error:any) {
         console.log('Error')
     })
 
+   
     const clock = new THREE.Clock();
     function animate() {
         if (mixer)
