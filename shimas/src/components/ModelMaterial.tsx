@@ -51,6 +51,11 @@ const ModelMaterial = () => {
     assetLoader.load(fileUrl.href, function (gltf) {
         const model = gltf.scene
         scene.add(model)
+        model.traverse(function(node:any){
+            if(node.isMesh){
+                node.castShadow=true;
+            }
+        })
         gui.addColor(options, 'Main').onChange(function(e) {
             model.getObjectByName('Cube').material.color.setHex(e);
         });
