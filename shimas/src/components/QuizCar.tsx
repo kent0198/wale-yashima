@@ -1,15 +1,21 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import YUKA from 'yuka'
+import gsap from 'gsap';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 
 const QuizCar = () => {
+
+    const monkeyUrl = new URL('../assets/quizcar/terrain.glb', import.meta.url);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
     // Sets the color of the background
-    renderer.setClearColor(0xFEFEFE);
+    renderer.setClearColor(0X94d8fb);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -19,20 +25,21 @@ const QuizCar = () => {
         1000
     );
 
-    // Sets orbit control to move the camera around
-    const orbit = new OrbitControls(camera, renderer.domElement);
 
     // Camera positioning
-    camera.position.set(6, 8, 14);
-    orbit.update();
+    camera.position.set(3, 10, 218);
+    camera.lookAt(scene.position)
 
-    // Sets a 12 by 12 gird helper
-    const gridHelper = new THREE.GridHelper(12, 12);
-    scene.add(gridHelper);
-
-    // Sets the x, y, and z axes with each having a length of 4
-    const axesHelper = new THREE.AxesHelper(4);
-    scene.add(axesHelper);
+    const loader=new GLTFLoader();
+    const dLoader= new DRACOLoader();
+    dLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
+    dLoader.setDecoderConfig({type:'tsx'})
+    loader.setDRACOLoader(dLoader)
+  
+    loader.load(monkeyUrl.href, function(glb:any){
+        const model=glb.scene;
+        scene.add(model)
+    })
 
     function animate() {
         renderer.render(scene, camera);
