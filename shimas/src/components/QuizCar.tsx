@@ -6,22 +6,24 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import 'three/examples/jsm/utils/SkeletonUtils.js';
 import { SkeletonUtils } from 'three/examples/jsm/Addons.js';
-import { YELLOWVEHICLESPATHS,REDVEHICLESPATHS,BLUEVEHICLESPATHS } from './ContantQuizCar';
-
+import { YELLOWVEHICLESPATHS, REDVEHICLESPATHS, BLUEVEHICLESPATHS } from './ContantQuizCar';
+import Loading from './Loading';
 
 const QuizCar = () => {
 
     const entityManager = new YUKA.EntityManager();
     const redCar = new URL('../assets/quizcar/red.glb', import.meta.url)
     const monkeyUrl = new URL('../assets/quizcar/terrain.glb', import.meta.url);
-    const blueCar= new URL('../assets/quizcar/blue.glb', import.meta.url)
+    const blueCar = new URL('../assets/quizcar/blue.glb', import.meta.url)
     const suv = new URL('../assets/quizcar/SUV.glb', import.meta.url);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    const yellowCars:any[] = [];
-    const redCars:any[]=[];
+    const loadingManager = new THREE.LoadingManager();
+
+    const yellowCars: any[] = [];
+    const redCars: any[] = [];
     const blueCars = [];
 
     // Sets the color of the background
@@ -50,8 +52,20 @@ const QuizCar = () => {
     scene.add(directionalLight)
 
 
+    const progressBar = document.getElementById('progress-bar') as HTMLProgressElement;
+    loadingManager.onProgress = function (url: any, loaded: any, total: any) {
+        if (progressBar) {
+            progressBar.value = (loaded / total) * 100;
+        }
+    }
 
-    const loader = new GLTFLoader();
+    const progressBarContainer = document.querySelector('.progress-bar-container') as HTMLElement;
+    loadingManager.onLoad = function () {
+        progressBarContainer.style.display = 'none';
+    }
+
+
+    const loader = new GLTFLoader(loadingManager);
     const dLoader = new DRACOLoader();
     dLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
     dLoader.setDecoderConfig({ type: 'tsx' })
@@ -62,33 +76,33 @@ const QuizCar = () => {
         scene.add(model)
     })
 
-    loader.load(suv.href, function(glb){
-        const model=glb.scene;
-        const v1=createCarV(model, YELLOWVEHICLESPATHS[0],entityManager, Math.PI)
-        const v2=createCarV(model, YELLOWVEHICLESPATHS[1],entityManager, Math.PI)
-        const v3=createCarV(model, YELLOWVEHICLESPATHS[2],entityManager, Math.PI)
-        const v4=createCarV(model, YELLOWVEHICLESPATHS[3],entityManager, Math.PI)
-        const v5=createCarV(model, YELLOWVEHICLESPATHS[4],entityManager, Math.PI)
-        const v6=createCarV(model, YELLOWVEHICLESPATHS[5],entityManager, Math.PI)
-        const v7=createCarV(model, YELLOWVEHICLESPATHS[6],entityManager, -Math.PI/2)
+    loader.load(suv.href, function (glb) {
+        const model = glb.scene;
+        const v1 = createCarV(model, YELLOWVEHICLESPATHS[0], entityManager, Math.PI)
+        const v2 = createCarV(model, YELLOWVEHICLESPATHS[1], entityManager, Math.PI)
+        const v3 = createCarV(model, YELLOWVEHICLESPATHS[2], entityManager, Math.PI)
+        const v4 = createCarV(model, YELLOWVEHICLESPATHS[3], entityManager, Math.PI)
+        const v5 = createCarV(model, YELLOWVEHICLESPATHS[4], entityManager, Math.PI)
+        const v6 = createCarV(model, YELLOWVEHICLESPATHS[5], entityManager, Math.PI)
+        const v7 = createCarV(model, YELLOWVEHICLESPATHS[6], entityManager, -Math.PI / 2)
 
-        yellowCars.push(v1,v2,v3,v4,v5,v6,v7)
+        yellowCars.push(v1, v2, v3, v4, v5, v6, v7)
     })
 
-    loader.load(redCar.href, function(glb){
+    loader.load(redCar.href, function (glb) {
         const model = glb.scene;
         const v1 = createCarV(model, REDVEHICLESPATHS[0], entityManager, Math.PI);
         const v2 = createCarV(model, REDVEHICLESPATHS[1], entityManager, Math.PI);
-        const v3 = createCarV(model, REDVEHICLESPATHS[2], entityManager, -Math.PI );
+        const v3 = createCarV(model, REDVEHICLESPATHS[2], entityManager, -Math.PI);
         const v4 = createCarV(model, REDVEHICLESPATHS[3], entityManager, 0);
-        const v5 = createCarV(model, REDVEHICLESPATHS[4], entityManager, Math.PI );
-        const v6 = createCarV(model, REDVEHICLESPATHS[5], entityManager,  Math.PI);
+        const v5 = createCarV(model, REDVEHICLESPATHS[4], entityManager, Math.PI);
+        const v6 = createCarV(model, REDVEHICLESPATHS[5], entityManager, Math.PI);
         const v7 = createCarV(model, REDVEHICLESPATHS[6], entityManager, Math.PI / 2);
         redCars.push(v1, v2, v3, v4, v5, v6, v7);
 
     })
 
-    loader.load(blueCar.href, function(glb) {
+    loader.load(blueCar.href, function (glb) {
         const model = glb.scene;
         const v1 = createCarV(model, BLUEVEHICLESPATHS[0], entityManager, Math.PI / 2);
         const v2 = createCarV(model, BLUEVEHICLESPATHS[1], entityManager, Math.PI / 2);
@@ -97,7 +111,7 @@ const QuizCar = () => {
         const v7 = createCarV(model, BLUEVEHICLESPATHS[4], entityManager, Math.PI);
         blueCars.push(v1, v2, v3, v4, v7);
     });
-    
+
 
     function sync(entity: any, renderComponent: any) {
         renderComponent.matrix.copy(entity.worldMatrix)
@@ -134,7 +148,7 @@ const QuizCar = () => {
         return vehicleAll;
 
     }
-    const time = new YUKA.Time();   
+    const time = new YUKA.Time();
     function animate() {
 
         const delta = time.update().getDelta();
