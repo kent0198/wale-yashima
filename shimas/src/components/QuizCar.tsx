@@ -6,19 +6,23 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import 'three/examples/jsm/utils/SkeletonUtils.js';
 import { SkeletonUtils } from 'three/examples/jsm/Addons.js';
-import { YELLOWVEHICLESPATHS } from './ContantQuizCar';
+import { YELLOWVEHICLESPATHS,REDVEHICLESPATHS,BLUEVEHICLESPATHS } from './ContantQuizCar';
 
 
 const QuizCar = () => {
 
     const entityManager = new YUKA.EntityManager();
+    const redCar = new URL('../assets/quizcar/red.glb', import.meta.url)
     const monkeyUrl = new URL('../assets/quizcar/terrain.glb', import.meta.url);
+    const blueCar= new URL('../assets/quizcar/blue.glb', import.meta.url)
     const suv = new URL('../assets/quizcar/SUV.glb', import.meta.url);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
     const yellowCars:any[] = [];
+    const redCars:any[]=[];
+    const blueCars = [];
 
     // Sets the color of the background
     renderer.setClearColor(0X94d8fb);
@@ -57,6 +61,7 @@ const QuizCar = () => {
         const model = glb.scene;
         scene.add(model)
     })
+
     loader.load(suv.href, function(glb){
         const model=glb.scene;
         const v1=createCarV(model, YELLOWVEHICLESPATHS[0],entityManager, Math.PI)
@@ -69,6 +74,31 @@ const QuizCar = () => {
 
         yellowCars.push(v1,v2,v3,v4,v5,v6,v7)
     })
+
+    loader.load(redCar.href, function(glb){
+        const model = glb.scene;
+        const v1 = createCarV(model, REDVEHICLESPATHS[0], entityManager, Math.PI);
+        const v2 = createCarV(model, REDVEHICLESPATHS[1], entityManager, Math.PI);
+        const v3 = createCarV(model, REDVEHICLESPATHS[2], entityManager, -Math.PI );
+        const v4 = createCarV(model, REDVEHICLESPATHS[3], entityManager, 0);
+        const v5 = createCarV(model, REDVEHICLESPATHS[4], entityManager, Math.PI );
+        const v6 = createCarV(model, REDVEHICLESPATHS[5], entityManager,  Math.PI);
+        const v7 = createCarV(model, REDVEHICLESPATHS[6], entityManager, Math.PI / 2);
+        redCars.push(v1, v2, v3, v4, v5, v6, v7);
+
+    })
+
+    loader.load(blueCar.href, function(glb) {
+        const model = glb.scene;
+        const v1 = createCarV(model, BLUEVEHICLESPATHS[0], entityManager, Math.PI / 2);
+        const v2 = createCarV(model, BLUEVEHICLESPATHS[1], entityManager, Math.PI / 2);
+        const v3 = createCarV(model, BLUEVEHICLESPATHS[2], entityManager, 0);
+        const v4 = createCarV(model, BLUEVEHICLESPATHS[3], entityManager, Math.PI / 2);
+        const v7 = createCarV(model, BLUEVEHICLESPATHS[4], entityManager, Math.PI);
+        blueCars.push(v1, v2, v3, v4, v7);
+    });
+    
+
     function sync(entity: any, renderComponent: any) {
         renderComponent.matrix.copy(entity.worldMatrix)
     }
