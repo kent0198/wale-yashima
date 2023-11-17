@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       {/*  <SyslarSysterm/>*/}
-      {/*  <BlenderToThree/>*/}
+    {/*  <BlenderToThree/> */}  
       {/*  <Cannon/>*/}
       {/*  <EvenSquaresInThree/> */}
      {/*   <ModelMaterial/> */}

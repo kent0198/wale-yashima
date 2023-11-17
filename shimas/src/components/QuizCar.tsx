@@ -1,19 +1,24 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import YUKA from 'yuka'
+import * as YUKA from 'yuka'
 import gsap from 'gsap';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import 'three/examples/jsm/utils/SkeletonUtils.js';
 import { SkeletonUtils } from 'three/examples/jsm/Addons.js';
+import { YELLOWVEHICLESPATHS } from './ContantQuizCar';
 
 
 const QuizCar = () => {
 
+    const entityManager = new YUKA.EntityManager();
     const monkeyUrl = new URL('../assets/quizcar/terrain.glb', import.meta.url);
+    const suv = new URL('../assets/quizcar/SUV.glb', import.meta.url);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
+
+    const yellowCars:any[] = [];
 
     // Sets the color of the background
     renderer.setClearColor(0X94d8fb);
@@ -52,7 +57,10 @@ const QuizCar = () => {
         const model = glb.scene;
         scene.add(model)
     })
-
+    loader.load(suv.href, function(glb){
+        const model=glb.scene;
+        const v1=createCarV(model, YELLOWVEHICLESPATHS[0],entityManager, Math.PI)
+    })
     function sync(entity: any, renderComponent: any) {
         renderComponent.matrix.copy(entity.worldMatrix)
     }
