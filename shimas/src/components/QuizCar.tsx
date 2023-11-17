@@ -60,6 +60,14 @@ const QuizCar = () => {
     loader.load(suv.href, function(glb){
         const model=glb.scene;
         const v1=createCarV(model, YELLOWVEHICLESPATHS[0],entityManager, Math.PI)
+        const v2=createCarV(model, YELLOWVEHICLESPATHS[1],entityManager, Math.PI)
+        const v3=createCarV(model, YELLOWVEHICLESPATHS[2],entityManager, Math.PI)
+        const v4=createCarV(model, YELLOWVEHICLESPATHS[3],entityManager, Math.PI)
+        const v5=createCarV(model, YELLOWVEHICLESPATHS[4],entityManager, Math.PI)
+        const v6=createCarV(model, YELLOWVEHICLESPATHS[5],entityManager, Math.PI)
+        const v7=createCarV(model, YELLOWVEHICLESPATHS[6],entityManager, -Math.PI/2)
+
+        yellowCars.push(v1,v2,v3,v4,v5,v6,v7)
     })
     function sync(entity: any, renderComponent: any) {
         renderComponent.matrix.copy(entity.worldMatrix)
@@ -89,13 +97,18 @@ const QuizCar = () => {
 
         followPathBehavior.active = false;
 
+        v.rotation.fromEuler(0, yRotation, 0);
+
 
         const vehicleAll = { vehicle: v, modelGroup: car };
         return vehicleAll;
 
     }
-
+    const time = new YUKA.Time();   
     function animate() {
+
+        const delta = time.update().getDelta();
+        entityManager.update(delta);
         renderer.render(scene, camera);
     }
 

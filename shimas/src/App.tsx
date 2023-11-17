@@ -16,10 +16,11 @@ function App() {
     {/*  <BlenderToThree/> */}  
       {/*  <Cannon/>*/}
       {/*  <EvenSquaresInThree/> */}
-     {/*   <ModelMaterial/> */}
+       {/* <ModelMaterial/> */}
       {/*  <ModelsLoaded/> */}
      {/*  <LoadingScreen/> */}
      <QuizCar/>
+  
     </>
   )
 }
